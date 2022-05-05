@@ -26,4 +26,6 @@ const TableBody = ({ tableColumns, tableData }) => {
   );
 };
 
+// I didn't memo TableBody because the Table is memod so this component should not be re-rendering unless Table does.
+
 export default TableBody;

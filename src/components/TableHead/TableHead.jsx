@@ -36,4 +36,6 @@ const TableHead = ({ tableColumns, handleTableSort }) => {
   );
 };
 
+// I didn't memo TableHead because the Table is memod so this component should not be re-rendering unless Table does.
+
 export default TableHead;
