@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { StyledDetailsTable } from "./DetailsTable.styled.jsx";
 
 //Details table is a re-usable component that can be used and styled according to use. It is being used in the Profile and Details page.
@@ -38,4 +38,4 @@ const DetailsTable = ({
   );
 };
 
-export default DetailsTable;
+export default memo(DetailsTable);

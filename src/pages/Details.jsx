@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import DetailsTable from "../components/DetailsTable/DetailsTable.jsx";
@@ -14,7 +14,7 @@ const Details = () => {
       </h1>
     );
 
-  let tableColumns = [
+  let tableColumnsData = [
     { headerName: "Title", dataKey: "title" },
     { headerName: "Magnitude", dataKey: "mag" },
     { headerName: "Time", dataKey: "time" },
@@ -25,6 +25,16 @@ const Details = () => {
 
   let data = [{ ...location.state }];
   const [{ title }] = data;
+  const [tableData] = useState(data);
+  const [tableColumns] = useState(tableColumnsData);
+
+  let memoizedData = useMemo(() => {
+    return tableData;
+  }, [tableData]);
+
+  let memoizedTableColumns = useMemo(() => {
+    return tableColumns;
+  }, [tableColumns]);
 
   return (
     <>
@@ -48,8 +58,8 @@ const Details = () => {
       >
         <h3 style={{ margin: "1rem 0rem" }}>{title}</h3>
         <DetailsTable
-          tableColumns={tableColumns}
-          data={data}
+          tableColumns={memoizedTableColumns}
+          data={memoizedData}
           wordWrap
           margin="0"
           padding="0px 1.1rem 0px 0px"

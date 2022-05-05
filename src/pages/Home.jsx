@@ -1,11 +1,11 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import handleTimeConversion from "../utils/handleConvertTime";
 import earthquakeData from "../data/earthquakesData.json";
 
 const EarthquakeTable = lazy(() => import("../components/Table/Table.jsx"));
 
-//Improvement could be to abstract component styles from component data being passed as props.
+//Improvement could be to use PropTypes to make sure that all components are strict with prop type.
 
 const Home = () => {
   const data = earthquakeData.data.features.map(({ properties, ...obj }) => ({
@@ -19,7 +19,7 @@ const Home = () => {
     title: properties.title,
   }));
 
-  const tableColumns = [
+  const parsedTableColumns = [
     {
       headerName: "Title",
       dataKey: "place",
@@ -29,6 +29,23 @@ const Home = () => {
     { headerName: "Magnitude", dataKey: "mag" },
     { headerName: "Time", dataKey: "time" },
   ];
+
+  /* 
+    There would be an update to these states, but since the data is static and not an API call, it's just to mimic the memoization.
+    This is built with the assumption the data is static and there could be buttons that re-render this page.  
+  */
+
+  const [fetchedData] = useState(data);
+  const [tableColumns] = useState(parsedTableColumns);
+
+  let memoizedData = useMemo(() => {
+    return fetchedData;
+  }, [fetchedData]);
+
+  let memoizedTableColumns = useMemo(() => {
+    return tableColumns;
+  }, [tableColumns]);
+
   return (
     <>
       <Helmet
@@ -45,16 +62,14 @@ const Home = () => {
         <h3 style={{ textAlign: "center", margin: "1rem" }}>
           USGS All Earthquakes, Past Hour
         </h3>
-        <div>
-          <EarthquakeTable
-            data={data}
-            tableColumns={tableColumns}
-            minWidth="600px"
-            trFontWeight="100"
-            tdFontWeight="600"
-            tdPadding="2px 1.2rem"
-          />
-        </div>
+        <EarthquakeTable
+          data={memoizedData}
+          tableColumns={memoizedTableColumns}
+          minWidth="600px"
+          trFontWeight="100"
+          tdFontWeight="600"
+          tdPadding="2px 1.2rem"
+        />
       </Suspense>
     </>
   );
